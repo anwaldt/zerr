@@ -12,7 +12,6 @@ Zerr::Zerr()
 
     this->client = jack_client_open("Zerr", JackNullOption, &status, NULL);
 
-
     // connect the callback function
     jack_set_process_callback(this->client, this->callback_process, this);
 
@@ -39,15 +38,12 @@ Zerr::Zerr()
     out = new jack_default_audio_sample_t*;
     in  = new jack_default_audio_sample_t*;
 
-
     // allocate and initialize FFT arrays
     n_buffers = L / jack_get_buffer_size(this->client);
 
     //    cout << L << endl;
     //    cout << jack_get_buffer_size(this->client) << endl;
     //    cout << n_buffers << endl;
-
-
 
     ifft_buff = new double[L];
     for(int i=0; i<=L; i++)
@@ -70,7 +66,7 @@ Zerr::Zerr()
     for(int i=0; i<L_fft; i++)
         power_spectrum[i] = 0;
 
-    p_fft  =  fftw_plan_dft_r2c_1d(L, fft_in, fft_out, FFTW_ESTIMATE);
+    p_fft  =  fftw_plan_dft_r2c_1d(L, fft_in,  fft_out,   FFTW_ESTIMATE);
     p_ifft =  fftw_plan_dft_c2r_1d(L, fft_out, ifft_buff, FFTW_ESTIMATE);
 
     jack_activate(this->client);
@@ -88,10 +84,8 @@ Zerr::Zerr()
 
 
 
-
 int Zerr::process(jack_nframes_t nframes)
 {
-
 
     // get input buffers
     for ( int i=0 ; i<nChannels; i++)
@@ -115,7 +109,7 @@ int Zerr::process(jack_nframes_t nframes)
     for(int idx=0; idx<nframes; idx++)
     {
         // only take the first channels
-        //fft_in[L-nframes+idx] = in[0][idx] * get_triangular_sample(L-nframes+idx,L);
+        // fft_in[L-nframes+idx] = in[0][idx] * get_triangular_sample(L-nframes+idx,L);
         fft_in[L-nframes+idx] = in[0][idx]; // * get_hann_sample(L-nframes+idx,L);
         // cout << idx << " ";
     }
@@ -125,9 +119,9 @@ int Zerr::process(jack_nframes_t nframes)
     for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
     {
         power_spectrum[tmpCNT] = fft_out[tmpCNT][0] *fft_out[tmpCNT][0]  + fft_out[tmpCNT][1]*fft_out[tmpCNT][1];
-        //        cout << power_spectrum[tmpCNT] << " ";
+        // cout << power_spectrum[tmpCNT] << " ";
     }
-    //    cout << endl;
+    // cout << endl;
 
     fftw_execute(p_ifft);
 
@@ -173,15 +167,15 @@ int Zerr::process(jack_nframes_t nframes)
 
                 // cout << ifft_index << " ";
 
-                cout << buf_ind << " ";
+                // cout << buf_ind << " ";
                 // cout << outsamp << " ";
                 // cout << ifft_out[bufCNT][buf_ind] << " ";
-
 
             }
 
             // cout << buf_ind << " ";
-            cout << endl;
+            // cout << endl;
+
         }
     }
 
