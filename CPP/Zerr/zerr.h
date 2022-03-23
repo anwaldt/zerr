@@ -109,6 +109,8 @@ private:
 
     uint n_overlap;
 
+    float gaussian_lobe(int pos, double mu, double sigma, int L);
+
 };
 
 #endif // ZERR_H
