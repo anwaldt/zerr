@@ -41,11 +41,11 @@ Zerr::Zerr()
     n_buffers = L / jack_get_buffer_size(this->client);
 
     ifft_buff = new double[L];
-    for(int i=0; i<=L; i++)
+    for(int i=0; i<L; i++)
         ifft_buff[i]=0;
 
     fft_in = new double[L];
-    for(int i=0; i<=L; i++)
+    for(int i=0; i<L; i++)
         fft_in[i]=0;
 
     fft_out = new fftw_complex[L_fft];
@@ -53,9 +53,17 @@ Zerr::Zerr()
     //        fftw_complex[i] = 0;
 
 
-    ifft_out = new double*[n_buffers];
-    for(int i=0; i<=n_buffers; i++)
-        ifft_out[i] = new double[L];
+    for(int i=0; i<n_buffers; i++)
+    {
+        std::vector <double*> tmp;
+
+        for(int j=0; j<nOutputs; j++)
+        {
+            tmp.push_back(new double[L]);
+        }
+
+        individual_outputs.push_back(tmp);
+    }
 
     power_spectrum.resize(L_fft);
 
@@ -73,6 +81,12 @@ Zerr::Zerr()
 
     jack_connect (client, jack_port_name(output_port[1]), "system:playback_2");
     jack_connect (client, jack_port_name(output_port[1]), "jaaa:in_2");
+
+    jack_connect (client, jack_port_name(output_port[2]), "system:playback_1");
+    jack_connect (client, jack_port_name(output_port[2]), "jaaa:in_3");
+
+    jack_connect (client, jack_port_name(output_port[3]), "system:playback_2");
+    jack_connect (client, jack_port_name(output_port[3]), "jaaa:in_4");
 
     // run forever
     sleep (-1);
@@ -120,17 +134,6 @@ int Zerr::process(jack_nframes_t nframes)
     fftw_execute(p_fft);
 
 
-
-
-    for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
-    {
-
-        float gain = gaussian_lobe(tmpCNT,50.0,5.0,L_fft);
-
-        fft_out[tmpCNT][0] = fft_out[tmpCNT][0]*gain;
-        fft_out[tmpCNT][1] = fft_out[tmpCNT][1]*gain;
-    }
-
     // get power spectrum
     for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
     {
@@ -142,17 +145,44 @@ int Zerr::process(jack_nframes_t nframes)
 
     get_spectral_peaks(power_spectrum, spec_peaks);
 
-    fftw_execute(p_ifft);
 
-    // copy recent ifft result to matrix
-    for(int tmpCNT = 0;tmpCNT< L; tmpCNT++)
+    // for all outputs
+    for(int outCNT=0; outCNT<nOutputs; outCNT++)
     {
-        ifft_out[ifft_index][tmpCNT] = ifft_buff[tmpCNT]* get_hann_sample(tmpCNT,L);
+        // apply gain function
+        for(int smpCNT = 0;smpCNT<L_fft; smpCNT++)
+        {
 
-        // cout << ifft_buff[tmpCNT] << " ";
-        // cout << ifft_out[ifft_index][tmpCNT] << " ";
+            float gain = gaussian_lobe(smpCNT, 50.0* (1.0+(float)outCNT), 10.0, L_fft);
 
+            fft_out[smpCNT][0] = fft_out[smpCNT][0]*gain;
+            fft_out[smpCNT][1] = fft_out[smpCNT][1]*gain;
+
+            // cout << gain << " ";
+        }
+        // cout << endl;
+
+        fftw_execute(p_ifft);
+
+        // copy samples to individual buffer
+        for(int smpCNT = 0;smpCNT<L; smpCNT++)
+        {
+            individual_outputs.at(ifft_index).at(outCNT)[smpCNT] = ifft_buff[smpCNT]* get_hann_sample(smpCNT,L);
+            //cout << ifft_buff[smpCNT] << " ";
+        }
+        // cout << endl;
     }
+
+
+//    // copy recent ifft result to matrix
+//    for(int tmpCNT = 0;tmpCNT< L; tmpCNT++)
+//    {
+//        ifft_out[ifft_index][tmpCNT] = ifft_buff[tmpCNT]* get_hann_sample(tmpCNT,L);
+
+//        // cout << ifft_buff[tmpCNT] << " ";
+//        // cout << ifft_out[ifft_index][tmpCNT] << " ";
+
+//    }
     // cout << endl;
 
     // delete-loop
@@ -179,8 +209,8 @@ int Zerr::process(jack_nframes_t nframes)
                 // the INDIVIDUAL ola index for each buffer
                 buf_ind = (sampCNT + (ifft_index * nframes) - (bufCNT*nframes)  )%L;
 
-                // outsamp =  get_triangular_sample(buf_ind,L);
-                outsamp = (ifft_out[bufCNT][buf_ind] / (L_fft+n_overlap)); // * get_hann_sample(buf_ind,L);
+                // outsamp = (ifft_out[bufCNT][buf_ind] / (L_fft+n_overlap)); // * get_hann_sample(buf_ind,L);
+                outsamp = (individual_outputs.at(bufCNT).at(chanCNT)[buf_ind] / (L_fft+n_overlap)); // * get_hann_sample(buf_ind,L);
 
                 out[chanCNT][sampCNT] += outsamp*0.25;
 
