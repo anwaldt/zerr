@@ -1,4 +1,3 @@
-// https://gist.github.com/ricpacca/652ab90ba3a5754e980c78d6634b84a0
 
 #include "zerr.h"
 
@@ -40,11 +39,7 @@ Zerr::Zerr()
     
     // allocate and initialize FFT arrays
     n_buffers = L / jack_get_buffer_size(this->client);
-    
-    //    cout << L << endl;
-    //    cout << jack_get_buffer_size(this->client) << endl;
-    //    cout << n_buffers << endl;
-    
+
     ifft_buff = new double[L];
     for(int i=0; i<=L; i++)
         ifft_buff[i]=0;
@@ -62,9 +57,7 @@ Zerr::Zerr()
     for(int i=0; i<=n_buffers; i++)
         ifft_out[i] = new double[L];
     
-    power_spectrum = new double[L_fft];
-    for(int i=0; i<L_fft; i++)
-        power_spectrum[i] = 0;
+    power_spectrum.resize(L_fft);
     
     p_fft  =  fftw_plan_dft_r2c_1d(L, fft_in,  fft_out,   FFTW_ESTIMATE);
     p_ifft =  fftw_plan_dft_c2r_1d(L, fft_out, ifft_buff, FFTW_ESTIMATE);
@@ -73,7 +66,7 @@ Zerr::Zerr()
     
     // connect inputs
     jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
-//    jack_connect (client, "pure_data:output1", jack_port_name(input_port[1]));
+    //    jack_connect (client, "pure_data:output1", jack_port_name(input_port[1]));
     // connect outputs
     jack_connect (client, jack_port_name(output_port[0]), "system:playback_1");
     jack_connect (client, jack_port_name(output_port[0]), "jaaa:in_1");
@@ -116,13 +109,7 @@ int Zerr::process(jack_nframes_t nframes)
     
     fftw_execute(p_fft);
 
-    // get power spectrum
-    for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
-    {
-        power_spectrum[tmpCNT] = fft_out[tmpCNT][0] *fft_out[tmpCNT][0]  + fft_out[tmpCNT][1]*fft_out[tmpCNT][1];
-        // cout << power_spectrum[tmpCNT] << " ";
-    }
-    // cout << endl;
+
 
 
     for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
@@ -133,6 +120,17 @@ int Zerr::process(jack_nframes_t nframes)
         fft_out[tmpCNT][0] = fft_out[tmpCNT][0]*gain;
         fft_out[tmpCNT][1] = fft_out[tmpCNT][1]*gain;
     }
+
+    // get power spectrum
+    for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
+    {
+        power_spectrum[tmpCNT] = (1.0 / (2.0*(float) L)) * (fft_out[tmpCNT][0] *fft_out[tmpCNT][0]  + fft_out[tmpCNT][1]*fft_out[tmpCNT][1]);
+        // cout << power_spectrum[tmpCNT] << " ";
+    }
+    // cout << endl;
+
+
+    get_spectral_peaks(power_spectrum, spec_peaks);
 
     fftw_execute(p_ifft);
     
@@ -220,10 +218,38 @@ float Zerr::get_triangular_sample(int pos, int L)
     return val;
 }
 
+
 float Zerr::gaussian_lobe(int pos, double mu, double sigma, int L)
 {
 
     double w     = exp( -(0.5) * pow( ((float) pos - mu) /sigma,2.0) );
 
     return w;
+}
+
+
+void Zerr::get_spectral_peaks(std::vector <double> powSpec, std::vector<int> peaks)
+{
+
+    std::vector <int> maxInd;
+    std::vector <float> maxVal;
+
+    // loop over spectrum
+    for(int i = 1; i < powSpec.size()-1; ++i)
+    {
+        // check for local peak
+        if(powSpec[i-1]<powSpec[i] && powSpec[i+1]<powSpec[i])
+        {
+            // check if peak is high enough
+            if(0.5*(powSpec[i]-powSpec[i-1] + powSpec[i]-powSpec[i+1])>0.1)
+            {
+                maxInd.push_back(i);
+                maxVal.push_back(powSpec[i]);
+                cout << i << ' ';
+            }
+        }
+    }
+
+    cout << endl;
+
 }

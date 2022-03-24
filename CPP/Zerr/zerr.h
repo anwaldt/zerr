@@ -2,6 +2,8 @@
 #define ZERR_H
 
 #include<stdlib.h>
+#include<vector>
+#include<algorithm>
 #include<math.h>
 #include<iostream>
 #include<unistd.h>
@@ -91,13 +93,12 @@ private:
     double *fft_in;
 
     double **ifft_out;
-    double *power_spectrum;
+
+    std::vector <double> power_spectrum;
 
     fftw_complex *fft_out;
 
     fftw_plan p_fft, p_ifft;
-
-
 
     uint fft_count = 0;
 
@@ -110,6 +111,11 @@ private:
     uint n_overlap;
 
     float gaussian_lobe(int pos, double mu, double sigma, int L);
+
+    /// stores all relevant spectral paeks
+    std::vector <int> spec_peaks;
+
+    void get_spectral_peaks(std::vector <double> powSpec, std::vector <int> peaks);
 
 };
 
