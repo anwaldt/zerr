@@ -37,7 +37,8 @@ private:
     ///
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
-    int nChannels = 1;
+    int nInputs = 1;
+    int nOutputs = 2;
 
     ///
     /// \brief client
