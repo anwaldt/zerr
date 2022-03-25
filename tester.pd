@@ -1,4 +1,4 @@
-#N canvas 178 191 841 966 10;
+#N canvas 178 113 841 966 10;
 #X floatatom 42 232 5 0 0 0 - - -, f 5;
 #X obj 165 338 dac~ 1;
 #X obj 165 271 *~ 0.1;
@@ -8,16 +8,16 @@
 #X obj 42 322 osc~;
 #X floatatom 42 295 5 0 0 0 - - -, f 5;
 #X obj 92 110 vsl 15 128 0 10 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 4900 1;
+-1 -1 8100 1;
 #X floatatom 92 256 5 0 0 0 - - -, f 5;
 #X obj 42 272 *;
 #X obj 42 45 vsl 15 128 0 1234 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 5630 1;
+-1 -1 5800 1;
 #X obj 42 208 line;
 #X msg 41 182 \$1 100;
 #X obj 266 245 noise~;
 #X obj 266 319 dac~ 1;
-#X obj 266 265 *~ 1;
+#X obj 266 265 *~ 0.2;
 #X connect 0 0 3 0;
 #X connect 0 0 10 0;
 #X connect 2 0 1 0;

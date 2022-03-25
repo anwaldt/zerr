@@ -28,7 +28,7 @@ public:
 private:
 
     /// IFFT length
-    uint L = 2048*2;
+    uint L = 2048;
     uint L_fft = (L / 2 + 1);
 
     /// number of IFFT buffer for overlap add
@@ -38,7 +38,7 @@ private:
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
     int nInputs  = 1;
-    int nOutputs = 4;
+    int nOutputs = 8;
 
     ///
     /// \brief client

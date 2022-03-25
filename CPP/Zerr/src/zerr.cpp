@@ -34,8 +34,8 @@ Zerr::Zerr()
                                              JackPortIsOutput, 0);
     }
 
-    out = new jack_default_audio_sample_t*;
-    in  = new jack_default_audio_sample_t*;
+    out = new jack_default_audio_sample_t*[nOutputs];
+    in  = new jack_default_audio_sample_t*[nOutputs];
 
     // allocate and initialize FFT arrays
     n_buffers = L / jack_get_buffer_size(this->client);
@@ -99,36 +99,25 @@ int Zerr::process(jack_nframes_t nframes)
 
     // get input buffers
     for ( int i=0 ; i<nInputs; i++)
-    {
-
         in[i]  = (jack_default_audio_sample_t *)
                 jack_port_get_buffer(this->input_port[i], jack_get_buffer_size(client));
 
-    }
-
     // get output buffers
     for ( int i=0 ; i<nOutputs; i++)
-    {
         out[i] = (jack_default_audio_sample_t *)
                 jack_port_get_buffer(this->output_port[i], jack_get_buffer_size(client));
-
-    }
 
     // shift FFT input by nframes
     for(int idx=0; idx<L-nframes; idx++)
     {
-        // fft_in[idx] = fft_in[idx+nframes] * get_triangular_sample(idx,L);
         fft_in[idx] = fft_in[idx+nframes];// * get_hann_sample(idx,L);
-        // cout << idx << " ";
     }
 
     // insert new samples
     for(int idx=0; idx<nframes; idx++)
     {
-        // only take the first channels
-        // fft_in[L-nframes+idx] = in[0][idx] * get_triangular_sample(L-nframes+idx,L);
+        // only take the first channel
         fft_in[L-nframes+idx] = in[0][idx]; // * get_hann_sample(L-nframes+idx,L);
-        // cout << idx << " ";
     }
 
     fftw_execute(p_fft);
@@ -146,21 +135,21 @@ int Zerr::process(jack_nframes_t nframes)
     get_spectral_peaks(power_spectrum, spec_peaks);
 
 
-    // for all outputs
+    /// IFFT with individual processing and output
     for(int outCNT=0; outCNT<nOutputs; outCNT++)
     {
         // apply gain function
         for(int smpCNT = 0;smpCNT<L_fft; smpCNT++)
         {
 
-            float gain = gaussian_lobe(smpCNT, 50.0* (1.0+(float)outCNT), 10.0, L_fft);
+            float gain = gaussian_lobe(smpCNT, 30.0* (1.0 + (float) outCNT), 10.0, L_fft);
 
             fft_out[smpCNT][0] = fft_out[smpCNT][0]*gain;
             fft_out[smpCNT][1] = fft_out[smpCNT][1]*gain;
 
-            // cout << gain << " ";
+//            cout << gain << " ";
         }
-        // cout << endl;
+//        cout << endl;
 
         fftw_execute(p_ifft);
 
@@ -173,17 +162,6 @@ int Zerr::process(jack_nframes_t nframes)
         // cout << endl;
     }
 
-
-//    // copy recent ifft result to matrix
-//    for(int tmpCNT = 0;tmpCNT< L; tmpCNT++)
-//    {
-//        ifft_out[ifft_index][tmpCNT] = ifft_buff[tmpCNT]* get_hann_sample(tmpCNT,L);
-
-//        // cout << ifft_buff[tmpCNT] << " ";
-//        // cout << ifft_out[ifft_index][tmpCNT] << " ";
-
-//    }
-    // cout << endl;
 
     // delete-loop
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
