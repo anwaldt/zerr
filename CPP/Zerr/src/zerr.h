@@ -107,10 +107,11 @@ private:
 
     float gaussian_lobe(int pos, double mu, double sigma, int L);
 
-    /// stores all relevant spectral paeks
-    std::vector <int> spec_peaks;
+    /// stores bins of all relevant spectral paeks
+    std::vector <int>   peak_bins;
+    std::vector <float> peak_heights;
 
-    void get_spectral_peaks(std::vector <double> powSpec, std::vector <int> peaks);
+    void get_spectral_peaks(std::vector <double> powSpec, std::vector <int> bins, std::vector<float> heights);
 
 };
 

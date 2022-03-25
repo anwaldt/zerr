@@ -76,18 +76,16 @@ Zerr::Zerr()
     jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
     //jack_connect (client, "pure_data:output1", jack_port_name(input_port[1]));
     // connect outputs
-    jack_connect (client, jack_port_name(output_port[0]), "system:playback_1");
-    jack_connect (client, jack_port_name(output_port[0]), "jaaa:in_1");
 
-    jack_connect (client, jack_port_name(output_port[1]), "system:playback_2");
-    jack_connect (client, jack_port_name(output_port[1]), "jaaa:in_2");
+    for(int chanCNT=0; chanCNT<nOutputs; chanCNT+=2)
+    {
+        jack_connect (client, jack_port_name(output_port[chanCNT]), "system:playback_1");
+        jack_connect (client, jack_port_name(output_port[chanCNT]), "jaaa:in_1");
 
-    jack_connect (client, jack_port_name(output_port[2]), "system:playback_1");
-    jack_connect (client, jack_port_name(output_port[2]), "jaaa:in_3");
+        jack_connect (client, jack_port_name(output_port[chanCNT+1]), "system:playback_2");
+        jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
 
-    jack_connect (client, jack_port_name(output_port[3]), "system:playback_2");
-    jack_connect (client, jack_port_name(output_port[3]), "jaaa:in_4");
-
+    }
     // run forever
     sleep (-1);
 }
@@ -132,7 +130,7 @@ int Zerr::process(jack_nframes_t nframes)
     // cout << endl;
 
 
-    get_spectral_peaks(power_spectrum, spec_peaks);
+    get_spectral_peaks(power_spectrum, peak_bins, peak_heights);
 
 
     /// IFFT with individual processing and output
@@ -147,9 +145,9 @@ int Zerr::process(jack_nframes_t nframes)
             fft_out[smpCNT][0] = fft_out[smpCNT][0]*gain;
             fft_out[smpCNT][1] = fft_out[smpCNT][1]*gain;
 
-//            cout << gain << " ";
+            //            cout << gain << " ";
         }
-//        cout << endl;
+        //        cout << endl;
 
         fftw_execute(p_ifft);
 
@@ -239,14 +237,12 @@ float Zerr::get_triangular_sample(int pos, int L)
 
 float Zerr::gaussian_lobe(int pos, double mu, double sigma, int L)
 {
-
     double w     = exp( -(0.5) * pow( ((float) pos - mu) /sigma,2.0) );
-
     return w;
 }
 
 
-void Zerr::get_spectral_peaks(std::vector <double> powSpec, std::vector<int> peaks)
+void Zerr::get_spectral_peaks(std::vector <double> powSpec, std::vector<int> bins, std::vector<float> heights)
 {
 
     std::vector <int> maxInd;
@@ -259,15 +255,26 @@ void Zerr::get_spectral_peaks(std::vector <double> powSpec, std::vector<int> pea
         if(powSpec[i-1]<powSpec[i] && powSpec[i+1]<powSpec[i])
         {
             // check if peak is high enough
-            if(0.5*(powSpec[i]-powSpec[i-1] + powSpec[i]-powSpec[i+1])>0.1)
-            {
-                maxInd.push_back(i);
-                maxVal.push_back(powSpec[i]);
-                // cout << i << ' ';
-            }
+            double height = pow(powSpec[i]-powSpec[i-1],2.0) + pow(powSpec[i]-powSpec[i+1],2.0);
+
+            bins.push_back(i);
+            heights.push_back(height);
         }
     }
 
-    // cout << endl;
+    std::vector<std::pair<float, int> > sorter;
 
+    for (int i = 0; i < bins.size(); ++i)
+            sorter.push_back(std::make_pair(heights[i], bins[i]));
+
+    std::sort(sorter.begin(), sorter.end());
+
+    // std::sort(bins.begin(),bins.end(), [&](int i,int j){return heights[i]<heights[j];} );
+    std::sort(heights.begin(),heights.end());
+
+    for (  const std::pair<float,int> &e : sorter ){
+             cout << e.second << ' ';
+        }
+
+    cout << endl;
 }
