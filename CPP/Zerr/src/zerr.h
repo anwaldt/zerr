@@ -43,7 +43,7 @@ private:
     int nInputs  = 1;
     int nOutputs = 16;
 
-    float min_peak_height = 0.01;
+    float min_peak_height = 0.001;
     int min_peak_distance = 10;
 
     float gaussian_width  = 10.0;
