@@ -6,7 +6,7 @@ with open('tester.txt') as f:
     lines = f.read().splitlines()
 
 
-line    = lines[0]
+line    = lines[100]
 a       = []    
 strings = line.split(' ')
 

@@ -73,8 +73,8 @@ Zerr::Zerr()
     jack_activate(this->client);
 
     // connect inputs
-    jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
-    //jack_connect (client, "pure_data:output1", jack_port_name(input_port[1]));
+    //jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
+    jack_connect (client, "PulseAudio JACK Sink:front-left", jack_port_name(input_port[0]));
     // connect outputs
 
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT+=2)
@@ -125,29 +125,47 @@ int Zerr::process(jack_nframes_t nframes)
     for(int tmpCNT = 0;tmpCNT<L_fft; tmpCNT++)
     {
         power_spectrum[tmpCNT] = (1.0 / (2.0*(float) L)) * (fft_out[tmpCNT][0] *fft_out[tmpCNT][0]  + fft_out[tmpCNT][1]*fft_out[tmpCNT][1]);
-        // cout << power_spectrum[tmpCNT] << " ";
+        //        cout << power_spectrum[tmpCNT] << " ";
     }
-    // cout << endl;
+    //    cout << endl;
 
 
-    get_spectral_peaks(power_spectrum, peak_bins, peak_heights);
+    std::vector<std::pair<float, int> > peaks = get_spectral_peaks(power_spectrum);
 
+    int n_peaks = peaks.size();
 
     /// IFFT with individual processing and output
     for(int outCNT=0; outCNT<nOutputs; outCNT++)
     {
-        // apply gain function
-        for(int smpCNT = 0;smpCNT<L_fft; smpCNT++)
+
+        if(peaks.empty()==false)
         {
 
-            float gain = gaussian_lobe(smpCNT, 30.0* (1.0 + (float) outCNT), 10.0, L_fft);
+            int peakInd = (n_peaks- outCNT)%n_peaks;
 
-            fft_out[smpCNT][0] = fft_out[smpCNT][0]*gain;
-            fft_out[smpCNT][1] = fft_out[smpCNT][1]*gain;
+            // cout << peakInd<< "  ";
 
-            //            cout << gain << " ";
+            int mu = peaks[ peakInd].second;
+
+            //cout << mu << endl;
+
+            float sigma = 15.0;
+
+            // apply gain function
+            for(int smpCNT = 0;smpCNT<L_fft; smpCNT++)
+            {
+
+                float gain =  ((float) n_peaks /(float) nOutputs) *  gaussian_lobe(smpCNT, (float) mu , sigma, L_fft);
+
+                // float gain = (1/(sigma*2*PI)) * gaussian_lobe(smpCNT, (float) mu * (1.0 + (float) outCNT), sigma, L_fft);
+
+                fft_out[smpCNT][0] = fft_out[smpCNT][0]*gain;
+                fft_out[smpCNT][1] = fft_out[smpCNT][1]*gain;
+
+                // cout << gain << " ";
+            }
+
         }
-        //        cout << endl;
 
         fftw_execute(p_ifft);
 
@@ -160,6 +178,7 @@ int Zerr::process(jack_nframes_t nframes)
         // cout << endl;
     }
 
+    // cout << endl;
 
     // delete-loop
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
@@ -188,7 +207,7 @@ int Zerr::process(jack_nframes_t nframes)
                 // outsamp = (ifft_out[bufCNT][buf_ind] / (L_fft+n_overlap)); // * get_hann_sample(buf_ind,L);
                 outsamp = (individual_outputs.at(bufCNT).at(chanCNT)[buf_ind] / (L_fft+n_overlap)); // * get_hann_sample(buf_ind,L);
 
-                out[chanCNT][sampCNT] += outsamp*0.25;
+                out[chanCNT][sampCNT] += outsamp;
 
                 // cout << ifft_index << " ";
 
@@ -242,39 +261,39 @@ float Zerr::gaussian_lobe(int pos, double mu, double sigma, int L)
 }
 
 
-void Zerr::get_spectral_peaks(std::vector <double> powSpec, std::vector<int> bins, std::vector<float> heights)
+std::vector<std::pair<float, int> > Zerr::get_spectral_peaks(std::vector <double> powSpec)
 {
 
-    std::vector <int> maxInd;
-    std::vector <float> maxVal;
+    /// for storing local maxima with height and index
+    std::vector<std::pair<float, int> > sorter;
+
+    int last_peak = -100;
 
     // loop over spectrum
     for(int i = 1; i < powSpec.size()-1; ++i)
     {
         // check for local peak
-        if(powSpec[i-1]<powSpec[i] && powSpec[i+1]<powSpec[i])
+        if((powSpec[i-1]<powSpec[i]) && (powSpec[i+1]<powSpec[i]))
         {
-            // check if peak is high enough
-            double height = pow(powSpec[i]-powSpec[i-1],2.0) + pow(powSpec[i]-powSpec[i+1],2.0);
 
-            bins.push_back(i);
-            heights.push_back(height);
+            double height = 0.5*((powSpec[i]-powSpec[i-1]) +  (powSpec[i]-powSpec[i+1]));
+
+            if(height>min_peak_height && i>(last_peak+min_peak_distance))
+            {
+                sorter.push_back(std::make_pair(height, i));
+                last_peak=i;
+            }
         }
     }
 
-    std::vector<std::pair<float, int> > sorter;
 
-    for (int i = 0; i < bins.size(); ++i)
-            sorter.push_back(std::make_pair(heights[i], bins[i]));
+    //    std::sort(sorter.begin(), sorter.end());
 
-    std::sort(sorter.begin(), sorter.end());
+    //        for (  const std::pair<float,int> &e : sorter ){
+    //            cout << e.second << ' ';
+    //        }
 
-    // std::sort(bins.begin(),bins.end(), [&](int i,int j){return heights[i]<heights[j];} );
-    std::sort(heights.begin(),heights.end());
+    //        cout << endl;
 
-    for (  const std::pair<float,int> &e : sorter ){
-             cout << e.second << ' ';
-        }
-
-    cout << endl;
+    return sorter;
 }

@@ -38,7 +38,10 @@ private:
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
     int nInputs  = 1;
-    int nOutputs = 8;
+    int nOutputs = 16;
+
+    float min_peak_height = 0.0001;
+    int min_peak_distance = 20;
 
     ///
     /// \brief client
@@ -107,11 +110,7 @@ private:
 
     float gaussian_lobe(int pos, double mu, double sigma, int L);
 
-    /// stores bins of all relevant spectral paeks
-    std::vector <int>   peak_bins;
-    std::vector <float> peak_heights;
-
-    void get_spectral_peaks(std::vector <double> powSpec, std::vector <int> bins, std::vector<float> heights);
+    std::vector<std::pair<float, int> > get_spectral_peaks(std::vector <double> powSpec);
 
 };
 
