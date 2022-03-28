@@ -31,7 +31,7 @@ private:
     uint L = 2048;
     uint L_fft = (L / 2 + 1);
 
-    int L_hop = 512;
+    int L_hop       = 512;
     int hop_counter = 0;
 
     /// number of IFFT buffer for overlap add
@@ -46,7 +46,7 @@ private:
     float min_peak_height = 0.01;
     int min_peak_distance = 10;
 
-    float gaussian_width = 15;
+    float gaussian_width  = 10.0;
 
     ///
     /// \brief client

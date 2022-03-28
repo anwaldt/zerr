@@ -14,7 +14,7 @@ Zerr::Zerr()
     jack_set_process_callback(this->client, this->callback_process, this);
 
 
-    // allocate array
+    // allocate JACK ports and arrays
     input_port = new jack_port_t*[nInputs];
     for (int i=0; i<nInputs; i++)
     {
@@ -36,7 +36,8 @@ Zerr::Zerr()
     out = new jack_default_audio_sample_t*[nOutputs];
     in  = new jack_default_audio_sample_t*[nOutputs];
 
-    // allocate and initialize FFT arrays
+    /// allocate and initialize FFT arrays
+
     n_buffers = L / jack_get_buffer_size(this->client);
 
     ifft_buff = new double[L];
@@ -48,9 +49,6 @@ Zerr::Zerr()
         fft_in[i]=0;
 
     fft_out = new fftw_complex[L_fft];
-    //    for(int i=0; i<=L; i++)
-    //        fftw_complex[i] = 0;
-
 
     for(int i=0; i<n_buffers; i++)
     {
@@ -68,6 +66,8 @@ Zerr::Zerr()
 
     p_fft  =  fftw_plan_dft_r2c_1d(L, fft_in,  fft_out,   FFTW_ESTIMATE);
     p_ifft =  fftw_plan_dft_c2r_1d(L, fft_out, ifft_buff, FFTW_ESTIMATE);
+
+    /// Activate and connect JACK stuff.
 
     jack_activate(this->client);
 
@@ -94,6 +94,8 @@ Zerr::Zerr()
 int Zerr::process(jack_nframes_t nframes)
 {
 
+    /// Input/Output buffers and stuff:
+
     // get input buffers
     for ( int i=0 ; i<nInputs; i++)
         in[i]  = (jack_default_audio_sample_t *)
@@ -117,6 +119,8 @@ int Zerr::process(jack_nframes_t nframes)
         fft_in[L-nframes+idx] = in[0][idx]; // * get_hann_sample(L-nframes+idx,L);
     }
 
+    /// FFT / IFFT:
+
     if(hop_counter>=L_hop)
     {
 
@@ -131,7 +135,7 @@ int Zerr::process(jack_nframes_t nframes)
         }
         //    cout << endl;
 
-
+        // Get spectral peaks:
         std::vector<std::pair<float, int> > peaks = get_spectral_peaks(power_spectrum);
 
         int n_peaks = peaks.size();
@@ -139,11 +143,9 @@ int Zerr::process(jack_nframes_t nframes)
         if(peaks.empty()==false)
         {
 
-            /// IFFT with individual processing and output
+            // IFFT with individual processing and output
             for(int outCNT=0; outCNT<nOutputs; outCNT++)
             {
-
-
 
                 int peakInd = (n_peaks- outCNT)%n_peaks;
 
@@ -153,7 +155,7 @@ int Zerr::process(jack_nframes_t nframes)
 
                 // cout << mu << endl;
 
-                float sigma = gaussian_width;
+                float sigma = gaussian_width + (1.0 / (float) L_fft) * 20.0;
 
                 // apply gain function
                 for(int smpCNT = 0;smpCNT<L_fft; smpCNT++)
@@ -168,10 +170,6 @@ int Zerr::process(jack_nframes_t nframes)
 
                     // cout << gain << " ";
                 }
-
-
-
-
 
                 fftw_execute(p_ifft);
 
@@ -197,25 +195,26 @@ int Zerr::process(jack_nframes_t nframes)
                     individual_outputs.at(ifft_index).at(outCNT)[smpCNT] = 0.0;
                 }
             }
-
         }
 
         hop_counter=0;
 
     }
 
-    // delete-loop
+    /// Output to all channel buffers:
+
+    // set output buffer "0.0"
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
     {
         for(int sampCNT=0; sampCNT<nframes; sampCNT++)
             out[chanCNT][sampCNT] = 0.0;
     }
 
-    // write all input samples to output
+    // write all samples
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
     {
 
-        // the overlap add
+        // the overlap add loop
         for(int bufCNT=0; bufCNT<n_buffers; bufCNT++)
         {
 
