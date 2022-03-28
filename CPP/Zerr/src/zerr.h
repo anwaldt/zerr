@@ -28,8 +28,11 @@ public:
 private:
 
     /// IFFT length
-    uint L = 2048*2;
+    uint L = 2048;
     uint L_fft = (L / 2 + 1);
+
+    int L_hop       = 512;
+    int hop_counter = 0;
 
     /// number of IFFT buffer for overlap add
     uint n_buffers;
@@ -37,45 +40,47 @@ private:
     ///
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
+<<<<<<< HEAD:CPP/Zerr/zerr.h
     int nInputs = 1;
     int nOutputs = 2;
+=======
+    int nInputs  = 1;
+    int nOutputs = 16;
+
+    float min_peak_height = 0.001;
+    int min_peak_distance = 10;
+
+    float gaussian_width  = 10.0;
+>>>>>>> multi-out:CPP/Zerr/src/zerr.h
 
     ///
     /// \brief client
     /// the jack client, obviously
     jack_client_t   *client;
 
-    ///
     /// \brief status
     /// gets the status from the jack server
     jack_status_t   status;
 
-
-    ///
     /// \brief input_port
     /// the jack input ports
     jack_port_t     **input_port;
 
-    ///
     /// \brief output_port
     /// the jack output ports
     jack_port_t     **output_port;
 
-    ///
     /// \brief in
     ///
     /// \brief out
     jack_default_audio_sample_t **in, **out;
 
-
-    ///
     /// \brief process
     /// \param nframes
     /// \return
     ///
     int process (jack_nframes_t nframes);
 
-    ///
     /// \brief callback_process
     ///         is used to access the members of this
     ///         class in the static mode
@@ -88,7 +93,6 @@ private:
 
     // FFTW stuff
 
-
     double *ifft_buff;
 
     double *fft_in;
@@ -99,9 +103,12 @@ private:
 
     fftw_complex *fft_out;
 
+    std::vector <std::vector <double*>> individual_outputs;
+
     fftw_plan p_fft, p_ifft;
 
     uint fft_count = 0;
+
 
     float get_hann_sample(int pos, int L);
     float get_triangular_sample(int pos, int L);
@@ -113,10 +120,7 @@ private:
 
     float gaussian_lobe(int pos, double mu, double sigma, int L);
 
-    /// stores all relevant spectral paeks
-    std::vector <int> spec_peaks;
-
-    void get_spectral_peaks(std::vector <double> powSpec, std::vector <int> peaks);
+    std::vector<std::pair<float, int> > get_spectral_peaks(std::vector <double> powSpec);
 
 };
 
