@@ -40,10 +40,7 @@ private:
     ///
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
-<<<<<<< HEAD:CPP/Zerr/zerr.h
-    int nInputs = 1;
-    int nOutputs = 2;
-=======
+
     int nInputs  = 1;
     int nOutputs = 16;
 
@@ -51,7 +48,6 @@ private:
     int min_peak_distance = 10;
 
     float gaussian_width  = 10.0;
->>>>>>> multi-out:CPP/Zerr/src/zerr.h
 
     ///
     /// \brief client

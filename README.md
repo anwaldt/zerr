@@ -1,9 +1,19 @@
-https://gist.github.com/ricpacca/652ab90ba3a5754e980c78d6634b84a0
+# Zerr*
 
-N_buffers = (L_buff/N_overlap)+1
+**Zerr**aeumlicher is a black box system for spectral spatialization. It receives a single input channel and distributes it to up to 16 output channels by means of spectral analysis and manipulation.
+These output channels can be routed to loudspeakers, directly.
 
-individual buffer indices
+## Algorithm
 
-i_n  =  (i+n*N_overlap)%L_buff
+### FFT
 
-x
+### Peak Picking
+
+### Spectral Splitting
+
+### IFFT
+
+## Dependencies
+
+- libjack
+- libfftw3
