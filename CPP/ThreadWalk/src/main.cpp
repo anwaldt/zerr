@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "zerr.h"
+#include "threadwalk.h"
 
 using namespace std;
 
 int main()
 {
 
-    Zerr *z = new Zerr();
+    ThreadWalk *z = new ThreadWalk();
 
     return 0;
 }

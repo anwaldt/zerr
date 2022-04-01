@@ -1,5 +1,5 @@
-#ifndef ZERR_H
-#define ZERR_H
+#ifndef THREADWALK_H
+#define THREADWALK_H
 
 #include<stdlib.h>
 #include<vector>
@@ -10,9 +10,7 @@
 
 #include<jack/jack.h>
 
-
 #include <complex.h>
-#include <fftw3.h>
 
 // #include<rfftw.h>
 
@@ -20,10 +18,10 @@
 
 
 
-class Zerr
+class ThreadWalk
 {
 public:
-    Zerr();
+    ThreadWalk();
 
 private:
 
@@ -31,25 +29,15 @@ private:
     uint L = 2048;
     uint L_fft = (L / 2 + 1);
 
-    int L_hop       = 512;
-    int hop_counter = 0;
-
-    /// number of IFFT buffer for overlap add
-    uint n_buffers;
-
-    ///
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
 
     int nInputs  = 1;
     int nOutputs = 16;
 
-    float min_peak_height = 0.001;
-    int min_peak_distance = 10;
+    int out_index = 0;
+    double sample_buffer[2] = {0.0 , 0.0};
 
-    float gaussian_width  = 10.0;
-
-    ///
     /// \brief client
     /// the jack client, obviously
     jack_client_t   *client;
@@ -87,37 +75,6 @@ private:
     static int callback_process(jack_nframes_t x, void* object);
 
 
-    // FFTW stuff
-
-    double *ifft_buff;
-
-    double *fft_in;
-
-    double **ifft_out;
-
-    std::vector <double> power_spectrum;
-
-    fftw_complex *fft_out;
-
-    std::vector <std::vector <double*>> individual_outputs;
-
-    fftw_plan p_fft, p_ifft;
-
-    uint fft_count = 0;
-
-
-    float get_hann_sample(int pos, int L);
-    float get_triangular_sample(int pos, int L);
-
-    /// index of the most recent fft/ifft buffer
-    uint ifft_index = 0;
-
-    uint n_overlap;
-
-    float gaussian_lobe(int pos, double mu, double sigma, int L);
-
-    std::vector<std::pair<float, int> > get_spectral_peaks(std::vector <double> powSpec);
-
 };
 
-#endif // ZERR_H
+#endif // THREADWALK_H

@@ -1,14 +1,14 @@
-#include "zerr.h"
+#include "peakshuffle.h"
 
 using std::cout;
 using std::endl;
 
-Zerr::Zerr()
+PeakShuffle::PeakShuffle()
 {
 
     // cout << "Starting Jack Client!" << endl;
 
-    this->client = jack_client_open("Zerr", JackNullOption, &status, NULL);
+    this->client = jack_client_open("PeakShuffle", JackNullOption, &status, NULL);
 
     // connect the callback function
     jack_set_process_callback(this->client, this->callback_process, this);
@@ -91,7 +91,7 @@ Zerr::Zerr()
 
 
 
-int Zerr::process(jack_nframes_t nframes)
+int PeakShuffle::process(jack_nframes_t nframes)
 {
 
     /// Input/Output buffers and stuff:
@@ -256,18 +256,18 @@ int Zerr::process(jack_nframes_t nframes)
     return 0;
 }
 
-int Zerr::callback_process(jack_nframes_t x, void* object)
+int PeakShuffle::callback_process(jack_nframes_t x, void* object)
 {
-    return static_cast<Zerr*>(object)->process(x);
+    return static_cast<PeakShuffle*>(object)->process(x);
 }
 
-float Zerr::get_hann_sample(int pos, int L)
+float PeakShuffle::get_hann_sample(int pos, int L)
 {
     float val = 0.5 * (1.0 - cos( (2.0*PI* (float) pos) / (float)L) );
     return val;
 }
 
-float Zerr::get_triangular_sample(int pos, int L)
+float PeakShuffle::get_triangular_sample(int pos, int L)
 {
     float val = 0;
 
@@ -280,14 +280,14 @@ float Zerr::get_triangular_sample(int pos, int L)
 }
 
 
-float Zerr::gaussian_lobe(int pos, double mu, double sigma, int L)
+float PeakShuffle::gaussian_lobe(int pos, double mu, double sigma, int L)
 {
     double w     = exp( -(0.5) * pow( ((float) pos - mu) /sigma,2.0) );
     return w;
 }
 
 
-std::vector<std::pair<float, int> > Zerr::get_spectral_peaks(std::vector <double> powSpec)
+std::vector<std::pair<float, int> > PeakShuffle::get_spectral_peaks(std::vector <double> powSpec)
 {
 
     /// for storing local maxima with height and index

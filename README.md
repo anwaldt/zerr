@@ -17,3 +17,12 @@ These output channels can be routed to loudspeakers, directly.
 
 - libjack
 - libfftw3
+
+
+
+# Pixelize / Flux Compensator
+
+- get the spectral flux for every 512 samples
+
+ 
+aka *flux compensator*
