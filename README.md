@@ -1,9 +1,14 @@
 # Zerr*
 
-**Zerr**aeumlicher is a black box system for spectral spatialization. It receives a single input channel and distributes it to up to 16 output channels by means of spectral analysis and manipulation.
-These output channels can be routed to loudspeakers, directly.
+**Zerr**aeumlichung is a set of black box systems for live spatialization.
+Each of the *Zerraeumlicher*-modules  receives a single input, distributing it to multiple output channels by means of different algorithms. Although the algorithms can be tuned, the only control over the spatialization is granted through the audio input.
+**Zerr**aeumlichung does not work with the placing and movement of virtual sound sources, but rather with a spatial distribution[^1]. Properties of this distribution and the sounds' timbre, respectively their texture, are inherently connected.
 
-## Algorithm
+[^1]: When space is used as a musical parameter, position and location are considered the equivalent to pitch and rhythm.
+
+# Algorithms
+
+## PeakShuffle
 
 ### FFT
 
@@ -13,7 +18,11 @@ These output channels can be routed to loudspeakers, directly.
 
 ### IFFT
 
-## Dependencies
+## FluxCompensator
+
+## ThreadWalk
+
+# Dependencies
 
 - libjack
 - libfftw3
@@ -24,5 +33,5 @@ These output channels can be routed to loudspeakers, directly.
 
 - get the spectral flux for every 512 samples
 
- 
+
 aka *flux compensator*
