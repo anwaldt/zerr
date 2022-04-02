@@ -1,12 +1,23 @@
 # Zerr*
 
-**Zerr**aeumlichung is a set of black box systems for live spatialization.
+**Zerr**aeumlichung is a set of black box systems for signal-driven live spatialization.
 Each of the *Zerraeumlicher*-modules  receives a single input, distributing it to multiple output channels by means of different algorithms. Although the algorithms can be tuned, the only control over the spatialization is granted through the audio input.
 **Zerr**aeumlichung does not work with the placing and movement of virtual sound sources, but rather with a spatial distribution[^1]. Properties of this distribution and the sounds' timbre, respectively their texture, are inherently connected.
 
 [^1]: When space is used as a musical parameter, position and location are considered the equivalent to pitch and rhythm.
 
 # Algorithms
+
+## GainMapper
+
+gain = speakeras
+
+## CycleShift
+
+sinusiodal movement through speakers
+
+- fixed order
+- random order
 
 ## PeakShuffle
 
