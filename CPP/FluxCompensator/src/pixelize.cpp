@@ -154,7 +154,7 @@ int Pixelize::process(jack_nframes_t nframes)
     float dispersion = std::max((float) 0.0, std::min((float) 1.0, (float) pow(1.0 - dist, 1.0)));
     // float dispersion = std::max((float) 0.0, std::min((float)1.0, dist));
 
-    cout << dispersion << endl;
+    // cout << dispersion << endl;
 
     /// Output to all channel buffers:
 

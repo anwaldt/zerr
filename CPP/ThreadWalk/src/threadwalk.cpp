@@ -100,8 +100,10 @@ int ThreadWalk::process(jack_nframes_t nframes)
 
         if(sign1 != sign2)
         {
+
             out_index = rand()%nOutputs;
-            cout << sample_buffer[0] << " - " << sample_buffer[1] << endl;
+
+            // cout << sample_buffer[0] << " - " << sample_buffer[1] << endl;
         }
 
         out[out_index][sampCNT] = in[0][sampCNT];
