@@ -3,7 +3,7 @@ from numpy import loadtxt, genfromtxt, linspace
 import matplotlib.pyplot as plt
 
 
-lines = genfromtxt('tester.txt', delimiter=' ')[:,:-1]
+lines = genfromtxt('../tester.txt', delimiter=' ')[:,:-1]
 
 
 N    = len(lines)
