@@ -5,21 +5,18 @@ import matplotlib.pyplot as plt
 
 lines = genfromtxt('../tester.txt', delimiter=' ')[:,:-1]
 
-
-N    = len(lines)
-
-
-
-
+N = len(lines)
 s = 0
 
-for i in range(16):
+for i in range(1000):
     
-    i=i*16
+    i    = i
     line = lines[i]  
     L    = len(line)
 
     n = linspace(s,s+L-1,L)        
     plt.plot(n,line)
-    s=s+L
+    s=s+L-1
     
+
+

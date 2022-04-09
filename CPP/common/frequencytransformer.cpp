@@ -1,6 +1,5 @@
 #include "frequencytransformer.h"
 
-
 using std::cout;
 using std::endl;
 
@@ -21,8 +20,8 @@ FrequencyTransformer::FrequencyTransformer(int L)
 
     p_fft   =  fftw_plan_dft_r2c_1d(L_input, fft_in,  fft_out,  FFTW_ESTIMATE);
     p_ifft  =  fftw_plan_dft_c2r_1d(L_input, fft_out, fft_in,   FFTW_ESTIMATE);
-}
 
+}
 
 void FrequencyTransformer::run_fft()
 {
@@ -43,6 +42,13 @@ void FrequencyTransformer::calculate_power_spectrum()
    }
    // cout << endl;
 }
+
+void FrequencyTransformer::apply_window()
+{
+    for(int tmpCNT=0; tmpCNT<L_fft; tmpCNT++)
+      fft_in[tmpCNT] = fft_in[tmpCNT] * Zerr::get_hann_sample(tmpCNT,L_fft);
+}
+
 double* FrequencyTransformer::fft_input()
 {
     return fft_in;

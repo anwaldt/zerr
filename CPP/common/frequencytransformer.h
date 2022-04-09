@@ -9,7 +9,9 @@
 #include<iostream>
 #include<unistd.h>
 
-#include <fftw3.h>
+#include<fftw3.h>
+
+#include"zerr.h"
 
 class FrequencyTransformer
 {
@@ -17,9 +19,9 @@ public:
 
     FrequencyTransformer(int L_fft);
 
+    void apply_window();
     void run_fft();
     void run_ifft();
-
     void calculate_power_spectrum();
 
     double* fft_input();

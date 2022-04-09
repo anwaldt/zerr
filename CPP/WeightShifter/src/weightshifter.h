@@ -14,6 +14,7 @@
 
 #include"../../common/zerr.h"
 #include"../../common/frequencytransformer.h"
+#include"../../common/linearinterpolator.h"
 
 class WeightShifter
 {
@@ -22,15 +23,14 @@ public:
 
 private:
 
+    float centroid = 0.0;
+
     /// IFFT length
     uint L = 2048;
     uint L_fft = (L / 2 + 1);
 
-    int L_hop       = 512;
-    int hop_counter = 0;
-
-    /// number of IFFT buffer for overlap add
-    uint n_buffers;
+    int L_hop       = 256;
+    int hop_counter = L_hop;
 
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
@@ -42,6 +42,8 @@ private:
 
     // used for manual scaling of flux to 0...1
     float flux_normalizer = 1.0/3.0;
+
+    LinearInterpolator *feature_interpolator;
 
     /// \brief client
     /// the jack client, obviously
@@ -83,8 +85,6 @@ private:
 
     /// index of the most recent fft/ifft buffer
     uint ifft_index = 0;
-
-    uint n_overlap;
 
 };
 
