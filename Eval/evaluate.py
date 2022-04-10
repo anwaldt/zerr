@@ -8,7 +8,7 @@ lines = genfromtxt('../tester.txt', delimiter=' ')[:,:-1]
 N = len(lines)
 s = 0
 
-for i in range(1000):
+for i in range(2000):
     
     i    = i
     line = lines[i]  

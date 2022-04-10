@@ -34,8 +34,9 @@ WeightShifter::WeightShifter()
   in  = new jack_default_audio_sample_t*[nInputs];
 
   feature_interpolator = new LinearInterpolator();
-
-  fft = new FrequencyTransformer(L);
+  fft        = new FrequencyTransformer(L);
+  features   = new FeatureMachine(L_fft);
+  sprkmapper = new SpeakerMapper(nOutputs);
 
   /// Activate and connect JACK stuff.
 
@@ -108,7 +109,8 @@ int WeightShifter::process(jack_nframes_t nframes)
 
       // interpolations:
       float lastVal = centroid;
-      centroid      = Zerr::centroid(fft->power_spectrum());
+      centroid      = features->centroid(fft->power_spectrum());
+
       //  std::rand();//
 
       feature_interpolator->set_values(lastVal, centroid, L_hop);
@@ -120,8 +122,6 @@ int WeightShifter::process(jack_nframes_t nframes)
     float val = feature_interpolator->get_value();
     feature_interpolator->next_step();
 
-    cout << val << " ";
-
     // write all samples
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
     {
@@ -130,9 +130,10 @@ int WeightShifter::process(jack_nframes_t nframes)
 
     hop_counter += 1;
 
+    // cout << val << " \n";
   }
 
-  cout << endl;
+   // cout << endl;
 
   return 0;
 }

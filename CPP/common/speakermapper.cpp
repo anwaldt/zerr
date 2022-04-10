@@ -1,7 +1,9 @@
 #include "speakermapper.h"
 
-SpeakerMapper::SpeakerMapper(int n_speakers)
+SpeakerMapper::SpeakerMapper(int n)
 {
+
+    n_speakers = n;
 
     speakers.resize(n_speakers);
 
@@ -23,6 +25,23 @@ void SpeakerMapper::read_config(std::string fileName)
 
 int SpeakerMapper::random_speaker()
 {
+
+}
+
+Zerr::pair SpeakerMapper::pair_panner(float in, float min, float max)
+{
+
+  float d = abs(min - max);
+
+  float scaled =  (d*0.5 + d*0.5*in) * ((float) n_speakers - 1.0);
+
+
+  int lower = std::max(0,std::min(n_speakers-1, (int)floor(scaled)));
+  int upper = std::max(0,std::min(n_speakers-1, (int)ceil(scaled)));
+
+  int frac = scaled-lower;
+
+  Zerr::pair p = {.s1 = lower, .s2=upper, .g1=frac, .g2=1.0-frac};
 
 }
 

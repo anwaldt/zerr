@@ -20,7 +20,7 @@ void LinearInterpolator::set_values(double start, double stop, int l)
 
 double LinearInterpolator::get_value()
 {
-    float out = y_start + ((float) pos * ((y_stop - y_start) / (float) L));
+    float out = y_start + ((float) pos * ((y_stop - y_start) / (float) (L-1)));
 
     return out;
 }

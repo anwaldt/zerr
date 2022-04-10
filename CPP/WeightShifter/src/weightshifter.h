@@ -12,9 +12,10 @@
 
 #include <complex.h>
 
-#include"../../common/zerr.h"
 #include"../../common/frequencytransformer.h"
 #include"../../common/linearinterpolator.h"
+#include"../../common/featuremachine.h"
+#include"../../common/speakermapper.h"
 
 class WeightShifter
 {
@@ -44,6 +45,7 @@ private:
     float flux_normalizer = 1.0/3.0;
 
     LinearInterpolator *feature_interpolator;
+    SpeakerMapper *sprkmapper;
 
     /// \brief client
     /// the jack client, obviously
@@ -82,6 +84,8 @@ private:
 
     // FFTW stuff
     FrequencyTransformer *fft;
+
+    FeatureMachine *features;
 
     /// index of the most recent fft/ifft buffer
     uint ifft_index = 0;

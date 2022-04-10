@@ -80,12 +80,25 @@ sinusiodal movement through speakers
 ### IFFT
 
 
+# Install
 
-# Dependencies
+Build and install works with meson + ninja. From the rot directory of the repository do:
 
+1:
+  meson build
+
+2:
+  ninja -C build/
+
+3:
+  sudo meson install -C build/
+
+## Dependencies
+
+- pip3 install meson
+- ninja
 - libjack
 - libfftw3
-
 
 
 # Pixelize / Flux Compensator

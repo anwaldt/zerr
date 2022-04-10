@@ -7,10 +7,20 @@
 #include<math.h>
 #include<iostream>
 #include<unistd.h>
+#include <limits>
 
 namespace Zerr {
 
 #define PI 3.14159265
+
+typedef struct
+{
+  int   s1, s2;
+  float g1,g2;
+  
+} pair;
+
+const double tiny = std::numeric_limits<double>::min();
 
 inline float gaussian_lobe(int pos, double mu, double sigma, int L)
 {
@@ -33,26 +43,7 @@ inline float get_hann_sample(int pos, int L)
 ///
 /// Normalized to fs/2
 
-inline float centroid(std::vector <double> x)
-{
 
-    double k     = 0;
-    double num   = 0.0000;
-    double denum = 0.00001; // use a tiny offset to avoid NaNs
-
-    // from k=1 to K:
-    for(auto it = std::next(begin(x)); it != std::end(x); ++it)
-    {
-        num   += k* *it;
-        denum += *it;
-
-        k+=1;
-    }
-
-    float c = (num / denum) / (float) x.size();
-
-    return c;
-}
 
 }
 
