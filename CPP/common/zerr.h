@@ -9,6 +9,8 @@
 #include<unistd.h>
 #include <limits>
 
+#include "yaml-cpp/yaml.h"
+
 namespace Zerr {
 
 #define PI 3.14159265
@@ -17,7 +19,7 @@ typedef struct
 {
   int   s1, s2;
   float g1,g2;
-  
+
 } pair;
 
 const double tiny = std::numeric_limits<double>::min();

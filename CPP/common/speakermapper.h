@@ -17,16 +17,19 @@ public:
 
     int speaker_by_height(int spkrIdx);
 
-    Zerr::pair pair_panner(float in, float min, float max);
+    Zerr::pair pair_panner(float in, float min, float max, float exponent);
 
 private:
 
     std::vector <Speaker> speakers;
     int n_speakers = 0;
 
-    std::vector <std::pair <int, double>> heights;
-    std::vector <std::pair <int, double>> front;
-    std::vector <std::pair <int, double>> left;
+    YAML::Node speaker_config;
+
+    std::vector <int> xInds;
+    std::vector <int> yInds;
+    std::vector <int> zInds;
+    std::vector <int> directnessInds;
 
 };
 

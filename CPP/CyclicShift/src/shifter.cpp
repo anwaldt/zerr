@@ -10,7 +10,6 @@ void Shifter::get_next_support_point(float this_phi, int fs)
 
     float tmp_route  = (0.5+0.5*sin(this_phi)) * (n_outputs-1);
 
-
 }
 
 void Shifter::shift(int fs)

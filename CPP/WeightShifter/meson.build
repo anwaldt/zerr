@@ -14,6 +14,6 @@ common_sources = [
 executable('weightshifter',
   sources: src+common_sources,
   include_directories: common_includes,
-  dependencies: [lib_m, dep_jack, dep_fftw],
+  dependencies: [lib_m, dep_jack, dep_fftw, dep_yaml],
   install: true
 )

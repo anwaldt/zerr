@@ -24,6 +24,9 @@ public:
 
 private:
 
+    YAML::Node zerr_config;
+
+
     float centroid = 0.0;
 
     /// IFFT length

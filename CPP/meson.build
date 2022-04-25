@@ -6,6 +6,7 @@ cc = meson.get_compiler('cpp')
 lib_m    = cc.find_library('m')
 dep_jack = dependency('jack')
 dep_fftw = dependency('fftw3')
+dep_yaml = dependency('yaml-cpp')
 
 common_includes = ['common/']
 

@@ -80,6 +80,16 @@ sinusiodal movement through speakers
 ### IFFT
 
 
+
+## Pixelize / Flux Compensator
+
+- get the spectral flux for every 512 samples
+
+
+aka *flux compensator*
+
+
+
 # Install
 
 Build and install works with meson + ninja. From the rot directory of the repository do:
@@ -97,13 +107,6 @@ Build and install works with meson + ninja. From the rot directory of the reposi
 
 - pip3 install meson
 - ninja
-- libjack
-- libfftw3
-
-
-# Pixelize / Flux Compensator
-
-- get the spectral flux for every 512 samples
-
-
-aka *flux compensator*
+- libjack2-dev
+- libfftw3-dev
+- libyaml-cpp-dev

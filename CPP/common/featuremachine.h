@@ -12,6 +12,8 @@ public:
     float centroid(std::vector <double> x);
     float flatness(std::vector <double> x);
 
+    float spectral_flux(std::vector <double> power_spectrum);
+
     int zero_crossing(double s);
 
 private:
@@ -19,6 +21,7 @@ private:
   int n_fft;
 
   std::vector <float> last_power_spectrum;
+  float last_spec_max = 0;
 
   // buffers a sample for zero crossing
   double last_sample = 0.0;

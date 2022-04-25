@@ -9,7 +9,7 @@ public:
     AverageFilter(int size);
 
 private:
-  
+
 };
 
 #endif // AVERAGEFILTER_H

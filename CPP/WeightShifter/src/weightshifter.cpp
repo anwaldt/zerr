@@ -6,6 +6,14 @@ using std::endl;
 WeightShifter::WeightShifter()
 {
 
+  cout << "Reading ZERR config file" << endl;
+
+  zerr_config    = YAML::LoadFile("/home/anwaldt/SOUND/Zerraeumlichung/config/zerr.yaml");
+  YAML::Node cfg = zerr_config["zerr"];
+
+  nOutputs       = cfg["n_outputs"].as<int>();
+  cout << "Number of outputs: " << nOutputs << endl;;
+
   this->client = jack_client_open("WeightShifter", JackNullOption, &status, NULL);
 
   // connect the callback function
@@ -36,7 +44,9 @@ WeightShifter::WeightShifter()
   feature_interpolator = new LinearInterpolator();
   fft        = new FrequencyTransformer(L);
   features   = new FeatureMachine(L_fft);
+
   sprkmapper = new SpeakerMapper(nOutputs);
+  sprkmapper->read_config("s");
 
   /// Activate and connect JACK stuff.
 
@@ -49,11 +59,11 @@ WeightShifter::WeightShifter()
 
   for(int chanCNT=0; chanCNT<nOutputs; chanCNT+=2)
   {
-    jack_connect (client, jack_port_name(output_port[chanCNT]), "system:playback_1");
-    jack_connect (client, jack_port_name(output_port[chanCNT]), "jaaa:in_1");
-
-    jack_connect (client, jack_port_name(output_port[chanCNT+1]), "system:playback_2");
-    jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
+    // jack_connect (client, jack_port_name(output_port[chanCNT]), "system:playback_1");
+    // jack_connect (client, jack_port_name(output_port[chanCNT]), "jaaa:in_1");
+    //
+    // jack_connect (client, jack_port_name(output_port[chanCNT+1]), "system:playback_2");
+    // jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
 
   }
   // run forever
@@ -120,13 +130,24 @@ int WeightShifter::process(jack_nframes_t nframes)
     }
 
     float val = feature_interpolator->get_value();
+
+    Zerr::pair p = sprkmapper->pair_panner(val,0.0,1.0,2.0);
+
     feature_interpolator->next_step();
 
-    // write all samples
-    for(int chanCNT=0; chanCNT<nOutputs; chanCNT++)
-    {
-      out[chanCNT][sampCNT] = in[0][sampCNT];
-    }
+    // cout << val << "xxx" << p.s1 << " ::: " << p.s2 << endl;
+
+    int s1 = sprkmapper->speaker_by_height(p.s1);
+    int s2 = sprkmapper->speaker_by_height(p.s2);
+
+    out[s1][sampCNT] = in[0][sampCNT]*p.g1;
+    out[s2][sampCNT] = in[0][sampCNT]*p.g2;
+
+    // // write all samples
+    // for(int chanCNT=0; chanCNT<2; chanCNT++)
+    // {
+    //   out[chanCNT][sampCNT] = in[0][sampCNT];
+    // }
 
     hop_counter += 1;
 

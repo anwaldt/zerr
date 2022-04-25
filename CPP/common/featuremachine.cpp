@@ -10,9 +10,9 @@ FeatureMachine::FeatureMachine(int fft_size)
 float FeatureMachine::centroid(std::vector <double> x)
 {
 
-    double k     = 0;
+    double k       = 0;
     double denum   = 0.0000;
-    double num = 0.00001; // use a tiny offset to avoid NaNs
+    double num     = 0.00001; // use a tiny offset to avoid NaNs
 
     // from k=1 to K:
     for(auto it = std::next(begin(x)); it != std::end(x); ++it)
@@ -49,6 +49,34 @@ float FeatureMachine::flatness(std::vector <double> x)
   return flatness;
 
 }
+
+float FeatureMachine::spectral_flux(std::vector <double> power_spectrum)
+{
+
+  float spec_max      = 0;
+  float dist          = 0;
+
+  // get new power spectrum
+  for(int tmpCNT = 0; tmpCNT<n_fft; tmpCNT++)
+  {
+
+      if(power_spectrum[tmpCNT]>spec_max)
+          spec_max = power_spectrum[tmpCNT];
+
+      if(last_spec_max>0)
+          dist += pow((power_spectrum[tmpCNT] - last_power_spectrum[tmpCNT]) / last_spec_max ,2);
+
+      // remember last power spectrum value
+      last_power_spectrum[tmpCNT] = power_spectrum[tmpCNT];
+
+  }
+
+  last_spec_max = spec_max;
+
+  return dist;
+
+}
+
 
 int FeatureMachine::zero_crossing(double s)
 {
