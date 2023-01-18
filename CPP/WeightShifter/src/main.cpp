@@ -4,10 +4,33 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
 
-    WeightShifter *z = new WeightShifter();
+  std::string zerrCfgFile;
+  std::string spkrCfgFile;
 
-    return 0;
+  // Display each command-line argument.
+  cout << "\nCommand-line arguments:\n";
+
+  for(int count = 1; count < (argc-1); count++ )
+  {
+    if( std::string(argv[count]) == "-z" )
+    {
+      // cout << argv[count] << std::endl;
+      zerrCfgFile = argv[count+1];
+    }
+
+    if( std::string(argv[count]) == "-s" )
+    {
+      // cout << argv[count] << std::endl;
+      spkrCfgFile = argv[count+1];
+    }
+  }
+
+// cout << "  argv[" << count << "]   " << argv[count] << "\n";
+
+   WeightShifter *z = new WeightShifter(zerrCfgFile,spkrCfgFile);
+
+  return 0;
 }

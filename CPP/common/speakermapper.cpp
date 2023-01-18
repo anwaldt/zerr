@@ -29,7 +29,7 @@ yInds.clear();
 zInds.clear();
 directnessInds.clear();
 
-speaker_config = YAML::LoadFile("/home/anwaldt/SOUND/Zerraeumlichung/config/en324.yaml");
+speaker_config = YAML::LoadFile(fileName);
 
 YAML::Node speakerNodes = speaker_config["speakers"];
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aj-snapshot>
+<alsa>
+  <client name="System">
+    <port id="0" />
+    <port id="1" />
+  </client>
+  <client name="Midi Through">
+    <port id="0" />
+  </client>
+  <client name="Client-128" />
+</alsa>
+<jack>
+  <client name="system">
+    <port name="capture_1" />
+    <port name="capture_2" />
+  </client>
+  <client name="PulseAudio JACK Sink">
+    <port name="front-left">
+      <connection port="system:playback_1" />
+    </port>
+    <port name="front-right">
+      <connection port="system:playback_2" />
+    </port>
+  </client>
+  <client name="SuperCollider">
+    <port name="out_1">
+      <connection port="system:playback_1" />
+    </port>
+    <port name="out_2">
+      <connection port="system:playback_2" />
+    </port>
+  </client>
+  <client name="WeightShifter">
+    <port name="output_1">
+      <connection port="SuperCollider:in_1" />
+    </port>
+    <port name="output_2">
+      <connection port="SuperCollider:in_2" />
+    </port>
+    <port name="output_3">
+      <connection port="SuperCollider:in_3" />
+    </port>
+    <port name="output_4">
+      <connection port="SuperCollider:in_4" />
+    </port>
+    <port name="output_5">
+      <connection port="SuperCollider:in_5" />
+    </port>
+    <port name="output_6">
+      <connection port="SuperCollider:in_6" />
+    </port>
+    <port name="output_7">
+      <connection port="SuperCollider:in_7" />
+    </port>
+    <port name="output_8">
+      <connection port="SuperCollider:in_8" />
+    </port>
+    <port name="output_9">
+      <connection port="SuperCollider:in_9" />
+    </port>
+    <port name="output_10">
+      <connection port="SuperCollider:in_10" />
+    </port>
+    <port name="output_11">
+      <connection port="SuperCollider:in_11" />
+    </port>
+    <port name="output_12">
+      <connection port="SuperCollider:in_12" />
+    </port>
+    <port name="output_13">
+      <connection port="SuperCollider:in_13" />
+    </port>
+    <port name="output_14">
+      <connection port="SuperCollider:in_14" />
+    </port>
+    <port name="output_15">
+      <connection port="SuperCollider:in_15" />
+    </port>
+    <port name="output_16">
+      <connection port="SuperCollider:in_16" />
+    </port>
+  </client>
+  <client name="pure_data">
+    <port name="output0">
+      <connection port="system:playback_1" />
+      <connection port="WeightShifter:input_1" />
+    </port>
+    <port name="output1">
+      <connection port="system:playback_2" />
+    </port>
+  </client>
+</jack>
+</aj-snapshot>

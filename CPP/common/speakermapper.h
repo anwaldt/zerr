@@ -22,7 +22,9 @@ public:
 private:
 
     std::vector <Speaker> speakers;
-    int n_speakers = 0;
+    std::vector <Speaker> outputs;
+
+    int n_speakers = 0;+
 
     YAML::Node speaker_config;
 

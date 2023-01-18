@@ -3,16 +3,24 @@
 using std::cout;
 using std::endl;
 
-WeightShifter::WeightShifter()
+WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
 {
 
-  cout << "Reading ZERR config file" << endl;
+  //////////////////////////////////////////////////////////////////////////////////////////
 
-  zerr_config    = YAML::LoadFile("/home/anwaldt/SOUND/Zerraeumlichung/config/zerr.yaml");
+  cout << "Reading ZERR config file" << endl;
+  this->zerrCfgFile = zerrCfgFile;
+
+  zerr_config    = YAML::LoadFile(zerrCfgFile);
   YAML::Node cfg = zerr_config["zerr"];
 
   nOutputs       = cfg["n_outputs"].as<int>();
   cout << "Number of outputs: " << nOutputs << endl;;
+
+  nSpeakers      = cfg["n_speakers"].as<int>();
+  cout << "Number of speakers: " << nSpeakers << endl;;
+
+
 
   this->client = jack_client_open("WeightShifter", JackNullOption, &status, NULL);
 
@@ -45,8 +53,8 @@ WeightShifter::WeightShifter()
   fft        = new FrequencyTransformer(L);
   features   = new FeatureMachine(L_fft);
 
-  sprkmapper = new SpeakerMapper(nOutputs);
-  sprkmapper->read_config("s");
+  sprkmapper = new SpeakerMapper(16);
+  sprkmapper->read_config(spkrCfgFile);
 
   /// Activate and connect JACK stuff.
 
@@ -121,8 +129,6 @@ int WeightShifter::process(jack_nframes_t nframes)
       float lastVal = centroid;
       centroid      = features->centroid(fft->power_spectrum());
 
-      //  std::rand();//
-
       feature_interpolator->set_values(lastVal, centroid, L_hop);
 
       hop_counter = 0;
@@ -142,12 +148,6 @@ int WeightShifter::process(jack_nframes_t nframes)
 
     out[s1][sampCNT] = in[0][sampCNT]*p.g1;
     out[s2][sampCNT] = in[0][sampCNT]*p.g2;
-
-    // // write all samples
-    // for(int chanCNT=0; chanCNT<2; chanCNT++)
-    // {
-    //   out[chanCNT][sampCNT] = in[0][sampCNT];
-    // }
 
     hop_counter += 1;
 

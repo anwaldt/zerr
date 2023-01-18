@@ -20,9 +20,11 @@
 class WeightShifter
 {
 public:
-    WeightShifter();
+    WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile);
 
 private:
+
+    std::string zerrCfgFile, spkrCfgFile;
 
     YAML::Node zerr_config;
 
@@ -36,11 +38,9 @@ private:
     int L_hop       = 256;
     int hop_counter = L_hop;
 
-    /// \brief nChannels
-    /// the number of audio channels @todo (should not be hard-coded)
-
-    int nInputs  = 1;
-    int nOutputs = 16;
+    int nInputs   = 1;
+    int nOutputs  = 16;
+    int nSpeakers = 16;
 
     float * gain_mask;
 
