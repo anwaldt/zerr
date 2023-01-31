@@ -20,7 +20,7 @@ directnessInds.push_back(i);
 
 void SpeakerMapper::read_config(std::string fileName)
 {
-std::cout << "Reading speaker config!" << std::endl;
+std::cout << "Reading speaker config:" << fileName << std::endl;
 
 // clear all existing data
 speakers.clear();

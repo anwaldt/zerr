@@ -8,7 +8,7 @@ WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
 
   //////////////////////////////////////////////////////////////////////////////////////////
 
-  cout << "Reading ZERR config file" << endl;
+  cout << "Reading ZERR config file: " << zerrCfgFile << endl;
   this->zerrCfgFile = zerrCfgFile;
 
   zerr_config    = YAML::LoadFile(zerrCfgFile);
@@ -53,7 +53,9 @@ WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
   fft        = new FrequencyTransformer(L);
   features   = new FeatureMachine(L_fft);
 
-  sprkmapper = new SpeakerMapper(16);
+  sprkmapper = new SpeakerMapper(nSpeakers);
+
+
   sprkmapper->read_config(spkrCfgFile);
 
   /// Activate and connect JACK stuff.
@@ -61,8 +63,8 @@ WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
   jack_activate(this->client);
 
   // connect inputs
-  jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
-  jack_connect (client, "PulseAudio JACK Sink:front-left", jack_port_name(input_port[0]));
+  //jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
+  //jack_connect (client, "PulseAudio JACK Sink:front-left", jack_port_name(input_port[0]));
   // connect outputs
 
   for(int chanCNT=0; chanCNT<nOutputs; chanCNT+=2)
@@ -127,7 +129,10 @@ int WeightShifter::process(jack_nframes_t nframes)
 
       // interpolations:
       float lastVal = centroid;
+
       centroid      = features->centroid(fft->power_spectrum());
+
+      cout << centroid << endl;
 
       feature_interpolator->set_values(lastVal, centroid, L_hop);
 
