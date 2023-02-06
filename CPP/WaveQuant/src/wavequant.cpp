@@ -93,7 +93,7 @@ int WaveQuant::process(jack_nframes_t nframes)
 
 
 
-        float scaled =  (0.5+ 0.5*in[0][saGainMappermpCNT]) * ((float) nOutputs - 1.0);
+        float scaled =  (0.5+ 0.5*in[0][sampCNT]) * ((float) nOutputs - 1.0);
 
         int lower = std::max(0,std::min(nOutputs-1, (int)floor(scaled)));
         int upper = std::max(0,std::min(nOutputs-1, (int)ceil(scaled)));

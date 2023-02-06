@@ -98,7 +98,7 @@ Build and install works with meson + ninja. From the rot directory of the reposi
   meson build
 
 2:
-  ninja -C build/
+  meson compile -C build
 
 3:
   sudo meson install -C build/

@@ -1,8 +1,8 @@
-#N canvas 479 468 1846 807 10;
+#N canvas 287 441 1846 807 10;
 #X floatatom 104 416 5 0 0 0 - - -;
 #X obj 104 454 osc~;
 #X obj 104 229 vsl 15 128 0 24000 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 300 1;
+-1 -1 38 1;
 #X obj 104 392 line;
 #X msg 103 366 \$1 100;
 #X obj 805 174 noise~;
@@ -11,28 +11,28 @@
 #X obj 1204 434 osc~;
 #X floatatom 1204 407 5 0 0 0 - - -;
 #X obj 1203 150 vsl 15 128 0.001 200 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 0 1;
+-262144 -1 -1 4700 1;
 #X obj 1204 330 line;
 #X msg 1203 304 \$1 100;
 #X obj 1204 467 *~ 10;
 #X obj 1203 498 +~ 100;
 #X obj 1340 289 vsl 15 128 0 20000 0 0 empty empty empty 0 -9 0 10
--262144 -1 -1 0 1;
+-262144 -1 -1 7300 1;
 #X obj 1292 230 vsl 15 128 0 5000 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 4400 1;
 #X obj 104 499 *~ 1;
 #X obj 1203 557 *~ 0.5;
 #X obj 202 254 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 4561 1;
+-1 -1 0 1;
 #X floatatom 202 387 5 0 0 0 - - -;
 #X obj 1388 311 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 9500 1;
 #X floatatom 1388 454 5 0 0 0 - - -;
 #X obj 947 261 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 0 1;
 #X floatatom 947 407 5 0 0 0 - - -;
 #X obj 896 239 vsl 15 128 0 20000 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 600 1;
 #X obj 805 458 lop~;
 #X obj 806 499 *~ 0.2;
 #X obj 807 549 +~;
@@ -45,17 +45,17 @@
 #X obj 1203 620 +~;
 #X floatatom 420 381 5 0 0 0 - - -;
 #X obj 420 194 vsl 15 128 0 5555 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 100 1;
 #X obj 420 357 line;
 #X msg 419 331 \$1 100;
 #X obj 420 534 *~ 1;
 #X obj 587 351 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 4400 1;
 #X floatatom 587 484 5 0 0 0 - - -;
 #X obj 420 441 phasor~;
 #X obj 420 464 expr~ $v1>0.5 \;;
 #X obj 840 229 vsl 15 128 0 20000 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
+-1 -1 4100 1;
 #X obj 804 408 hip~;
 #X obj 104 566 dac~ 1;
 #X obj 420 601 dac~ 1;
@@ -89,14 +89,17 @@
 #X connect 25 0 26 1;
 #X connect 26 0 27 0;
 #X connect 27 0 28 0;
+#X connect 28 0 48 0;
 #X connect 29 0 30 0;
 #X connect 30 0 28 1;
 #X connect 31 0 32 0;
 #X connect 32 0 33 1;
+#X connect 33 0 47 0;
 #X connect 34 0 41 0;
 #X connect 35 0 37 0;
 #X connect 36 0 34 0;
 #X connect 37 0 36 0;
+#X connect 38 0 46 0;
 #X connect 39 0 40 0;
 #X connect 40 0 38 1;
 #X connect 41 0 42 0;

@@ -18,4 +18,9 @@ common_sources = [
   'common/featuremachine.cpp'
 ]
 
+subdir('CyclicShift')
+subdir('PeakShuffle')
+subdir('Pixelize')
+subdir('ThreadWalk')
 subdir('WeightShifter')
+subdir('WaveQuant')

@@ -132,7 +132,7 @@ int WeightShifter::process(jack_nframes_t nframes)
 
       centroid      = features->centroid(fft->power_spectrum());
 
-      cout << centroid << endl;
+      // cout << centroid << endl;
 
       feature_interpolator->set_values(lastVal, centroid, L_hop);
 
