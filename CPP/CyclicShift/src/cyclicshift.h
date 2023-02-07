@@ -8,6 +8,8 @@
 #include<iostream>
 #include<unistd.h>
 
+#include "yaml-cpp/yaml.h"
+
 #include<jack/jack.h>
 
 
@@ -23,11 +25,15 @@
 class CyclicShift
 {
 public:
-    CyclicShift();
+    CyclicShift(std::string zerrCfgFile, std::string spkrCfgFile);
 
 private:
 
     Shifter *sine_shifter;
+
+    std::string zerrCfgFile, spkrCfgFile;
+
+    YAML::Node zerr_config;
 
     /// IFFT length
     uint L = 2048;
@@ -43,10 +49,11 @@ private:
     /// \brief nChannels
     /// the number of audio channels @todo (should not be hard-coded)
 
-    int nInputs  = 1;
-    int nOutputs = 16;
+    int nSpeakers = 8;
+    int nInputs   = 1;
+    int nOutputs  = 8;
 
-    float * gain_mask;
+    float *gain_mask;
 
     // used for manual scaling of flux to 0...1
     float flux_normalizer = 1.0/3.0;

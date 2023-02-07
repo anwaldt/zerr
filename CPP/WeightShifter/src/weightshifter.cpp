@@ -18,7 +18,7 @@ WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
   cout << "Number of outputs: " << nOutputs << endl;;
 
   nSpeakers      = cfg["n_speakers"].as<int>();
-  cout << "Number of speakers: " << nSpeakers << endl;;
+  cout << "Number of speakers: " << nSpeakers << endl;
 
 
 

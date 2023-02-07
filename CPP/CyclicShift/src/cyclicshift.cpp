@@ -3,8 +3,22 @@
 using std::cout;
 using std::endl;
 
-CyclicShift::CyclicShift()
+CyclicShift::CyclicShift(std::string zerrCfgFile, std::string spkrCfgFile)
 {
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    cout << "Reading ZERR config file: " << zerrCfgFile << endl;
+    this->zerrCfgFile = zerrCfgFile;
+
+    zerr_config    = YAML::LoadFile(zerrCfgFile);
+    YAML::Node cfg = zerr_config["zerr"];
+
+    nOutputs       = cfg["n_outputs"].as<int>();
+    cout << "Number of outputs: " << nOutputs << endl;;
+
+    nSpeakers      = cfg["n_speakers"].as<int>();
+    cout << "Number of speakers: " << nSpeakers << endl;
 
     // cout << "Starting Jack Client!" << endl;
 
