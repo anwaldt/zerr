@@ -33,7 +33,7 @@ private:
     /// the number of audio channels @todo (should not be hard-coded)
 
     int nInputs  = 1;
-    int nOutputs = 16;
+    int nOutputs = 8;
 
 
 

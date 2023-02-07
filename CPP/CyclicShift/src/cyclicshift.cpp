@@ -177,17 +177,15 @@ int CyclicShift::process(jack_nframes_t nframes)
 
     for(int sampCNT=0; sampCNT<nframes; sampCNT++)
     {
-
         sine_shifter->shift(jack_get_sample_rate(client));
         // std::cout <<  sine_shifter.route + sine_shifter.interp << std::endl;
         out[sine_shifter->speaker_a()][sampCNT] += in[0][sampCNT] * (1.0 - sine_shifter->get_interpolator());
         out[sine_shifter->speaker_b()][sampCNT] += in[0][sampCNT] * (sine_shifter->get_interpolator());
-
     }
 
-//    std::cout << sine_shifter->get_route() << " = \t ";
-//        std::cout << sine_shifter->speaker_a() << " : \t " << 1.0-sine_shifter->get_interpolator() <<  " - \t ";
-//        std::cout << sine_shifter->speaker_b() << " : " << sine_shifter->get_interpolator() << std::endl;
+    // std::cout << sine_shifter->get_route() << " = \t ";
+    // std::cout << sine_shifter->speaker_a() << " : \t " << 1.0-sine_shifter->get_interpolator() <<  " - \t ";
+    // std::cout << sine_shifter->speaker_b() << " : " << sine_shifter->get_interpolator() << std::endl;
 
     ifft_index++;
     if(ifft_index>=n_buffers)

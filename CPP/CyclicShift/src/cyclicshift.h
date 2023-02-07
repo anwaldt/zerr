@@ -45,10 +45,6 @@ private:
     /// number of IFFT buffer for overlap add
     uint n_buffers;
 
-    ///
-    /// \brief nChannels
-    /// the number of audio channels @todo (should not be hard-coded)
-
     int nSpeakers = 8;
     int nInputs   = 1;
     int nOutputs  = 8;
