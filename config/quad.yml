@@ -1,0 +1,44 @@
+speakers:
+  0:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    directness: 1.0
+  1:
+    x: 2.0
+    y: 5.0
+    z: 2.0
+    directness: 1.0
+  2:
+    x: 3.0
+    y: 15.0
+    z: 3.0
+    directness: 1.0
+  3:
+    x: 4.0
+    y: 5.0
+    z: 4.0
+    directness: 1.0
+
+
+outputs:
+  0:
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    directness: 1.0
+  1:
+    x: 2.0
+    y: 5.0
+    z: 2.0
+    directness: 1.0
+  2:
+    x: 3.0
+    y: 15.0
+    z: 3.0
+    directness: 1.0
+  3:
+    x: 4.0
+    y: 5.0
+    z: 4.0
+    directness: 1.0

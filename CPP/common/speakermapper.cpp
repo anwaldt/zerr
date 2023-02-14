@@ -1,5 +1,8 @@
 #include "speakermapper.h"
 
+using std::cout;
+using std::endl;
+
 SpeakerMapper::SpeakerMapper(int n)
 {
 
@@ -124,14 +127,20 @@ Zerr::pair SpeakerMapper::pair_panner(float in, float min, float max, float expo
   int upper = std::max(0,std::min(n_speakers-1, (int)ceil(scaled)));
 
   // keep frac within 0.0 - 1.0 to avoid clipping
-  int frac = std::min((float)0.0,  std::max((float) 1.0, scaled-lower));
+  double frac = std::max((float)0.0,  std::min((float) 1.0, scaled-lower));
+
+
+  cout << "Scaled:" << scaled<< endl;
+  cout << "Frac:" << frac << endl;
+
+  //cout << "OUT 2:" << p.s2 << " ::: " << p.g2 << endl;
 
   Zerr::pair p = {};
 
   p.s1 = lower;
   p.s2 = upper;
-  p.g1 = frac;
-  p.g2 = 1.0-frac;
+  p.g2 = frac;
+  p.g1 = 1.0-frac;
 
   return p;
 

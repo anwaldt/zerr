@@ -142,17 +142,18 @@ int WeightShifter::process(jack_nframes_t nframes)
 
     float val = feature_interpolator->get_value();
 
-    Zerr::pair p = sprkmapper->pair_panner(val,0.0,1.0,2.0);
+    Zerr::pair p = sprkmapper->pair_panner(val,0.0,0.2,1.0);
 
     feature_interpolator->next_step();
 
-    // cout << val << "xxx" << p.s1 << " ::: " << p.s2 << endl;
+//    cout << "OUT 1:" << p.s1 << " ::: " << p.g1 << endl;
+//    cout << "OUT 2:" << p.s2 << " ::: " << p.g2 << endl;
 
     int s1 = sprkmapper->speaker_by_height(p.s1);
     int s2 = sprkmapper->speaker_by_height(p.s2);
 
-    out[s1][sampCNT] = in[0][sampCNT]*p.g1;
-    out[s2][sampCNT] = in[0][sampCNT]*p.g2;
+    out[p.s1][sampCNT] = in[0][sampCNT]*p.g1;
+    out[p.s2][sampCNT] = in[0][sampCNT]*p.g2;
 
     hop_counter += 1;
 

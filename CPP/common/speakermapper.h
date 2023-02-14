@@ -1,8 +1,11 @@
 #ifndef SPEAKERMAPPER_H
 #define SPEAKERMAPPER_H
 
+#include<stdlib.h>
+#include<iostream>
 #include"zerr.h"
 #include "speaker.h"
+#include<cmath>
 
 class SpeakerMapper
 {
