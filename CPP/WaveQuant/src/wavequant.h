@@ -21,7 +21,7 @@
 class WaveQuant
 {
 public:
-    WaveQuant();
+    WaveQuant(std::string zerrCfgFile, std::string spkrCfgFile);
 
 private:
 
@@ -33,7 +33,7 @@ private:
     /// the number of audio channels @todo (should not be hard-coded)
 
     int nInputs  = 1;
-    int nOutputs = 8;
+    int nOutputs = 0;
 
 
 

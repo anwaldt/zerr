@@ -18,7 +18,9 @@ public:
 
     int random_speaker();
 
-    int speaker_by_height(int spkrIdx);
+    int speaker_by_x(int spkrIdx);
+    int speaker_by_y(int spkrIdx);
+    int speaker_by_z(int spkrIdx);
 
     Zerr::pair pair_panner(float in, float min, float max, float exponent);
 
@@ -34,7 +36,8 @@ private:
     std::vector <int> xInds;
     std::vector <int> yInds;
     std::vector <int> zInds;
-    std::vector <int> directnessInds;
+    std::vector <int> aInds;
+    std::vector <int> eInds;
 
 };
 

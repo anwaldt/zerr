@@ -7,13 +7,14 @@ class Speaker
 {
 public:
 
-    Speaker(int idx, float x, float y, float z, float directness);
+    Speaker(int idx, float x, float y, float z, float a, float d);
 
     // all the getters
     float get_x(){return x;};
     float get_y(){return y;};
     float get_z(){return z;};
-    float get_directness(){return directness;};
+    float get_a(){return a;};
+    float get_e(){return e;};
 
     float get_idx(){return idx;};
 
@@ -24,8 +25,8 @@ private:
     float y = 0.0;
     float z = 0.0;
 
-    float directness  = 0.0;
-
+    float a  = 0.0;
+    float e  = 0.0;
 
 };
 

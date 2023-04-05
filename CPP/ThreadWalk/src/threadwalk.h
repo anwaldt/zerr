@@ -33,7 +33,7 @@ private:
     /// the number of audio channels @todo (should not be hard-coded)
 
     int nInputs  = 1;
-    int nOutputs = 16;
+    int nOutputs = 8;
 
     int out_index = 0;
     double sample_buffer[2] = {0.0 , 0.0};

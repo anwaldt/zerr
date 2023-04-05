@@ -3,11 +3,10 @@
 using std::cout;
 using std::endl;
 
-WaveQuant::WaveQuant()
+WaveQuant::WaveQuant(std::string zerrCfgFile, std::string spkrCfgFile)
 {
 
     // cout << "Starting Jack Client!" << endl;
-
     this->client = jack_client_open("WaveQuant", JackNullOption, &status, NULL);
 
     // connect the callback function
@@ -42,17 +41,17 @@ WaveQuant::WaveQuant()
     jack_activate(this->client);
 
     // connect inputs
-    jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
-    jack_connect (client, "PulseAudio JACK Sink:front-left", jack_port_name(input_port[0]));
+    // jack_connect (client, "pure_data:output0", jack_port_name(input_port[0]));
+    // jack_connect (client, "PulseAudio JACK Sink:front-left", jack_port_name(input_port[0]));
     // connect outputs
 
     for(int chanCNT=0; chanCNT<nOutputs; chanCNT+=2)
     {
-        jack_connect (client, jack_port_name(output_port[chanCNT]), "system:playback_1");
-        jack_connect (client, jack_port_name(output_port[chanCNT]), "jaaa:in_1");
-
-        jack_connect (client, jack_port_name(output_port[chanCNT+1]), "system:playback_2");
-        jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
+        // jack_connect (client, jack_port_name(output_port[chanCNT]), "system:playback_1");
+        // jack_connect (client, jack_port_name(output_port[chanCNT]), "jaaa:in_1");
+        //
+        // jack_connect (client, jack_port_name(output_port[chanCNT+1]), "system:playback_2");
+        // jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
 
     }
     // run forever

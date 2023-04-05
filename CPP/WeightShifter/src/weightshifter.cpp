@@ -76,6 +76,7 @@ WeightShifter::WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile)
     // jack_connect (client, jack_port_name(output_port[chanCNT+1]), "jaaa:in_2");
 
   }
+
   // run forever
   sleep (-1);
 }
@@ -149,8 +150,8 @@ int WeightShifter::process(jack_nframes_t nframes)
 //    cout << "OUT 1:" << p.s1 << " ::: " << p.g1 << endl;
 //    cout << "OUT 2:" << p.s2 << " ::: " << p.g2 << endl;
 
-    int s1 = sprkmapper->speaker_by_height(p.s1);
-    int s2 = sprkmapper->speaker_by_height(p.s2);
+    int s1 = sprkmapper->speaker_by_z(p.s1);
+    int s2 = sprkmapper->speaker_by_z(p.s2);
 
     out[p.s1][sampCNT] = in[0][sampCNT]*p.g1;
     out[p.s2][sampCNT] = in[0][sampCNT]*p.g2;
