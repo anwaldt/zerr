@@ -11,7 +11,8 @@ dep_yaml = dependency('yaml-cpp')
 common_includes = ['common/']
 
 common_sources = [
-  'common/frequencytransformer.cpp',
+  'common/frequencytransformer.cpp',  
+  'common/zerrmodule.cpp',
   'common/speakermapper.cpp',
   'common/speaker.cpp',
   'common/linearinterpolator.cpp',

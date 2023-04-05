@@ -4,6 +4,7 @@ src = ['src/main.cpp', 'src/weightshifter.cpp']
 common_includes = ['../common/']
 
 common_sources = [
+ '../common/zerrmodule.cpp',
   '../common/frequencytransformer.cpp',
   '../common/speakermapper.cpp',
   '../common/speaker.cpp',

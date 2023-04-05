@@ -16,8 +16,9 @@
 #include"../../common/linearinterpolator.h"
 #include"../../common/featuremachine.h"
 #include"../../common/speakermapper.h"
+#include"../../common/zerrmodule.h"
 
-class WeightShifter
+class WeightShifter:ZerrModule
 {
 public:
     WeightShifter(std::string zerrCfgFile, std::string spkrCfgFile);

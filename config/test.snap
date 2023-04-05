@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aj-snapshot>
+<alsa>
+  <client name="System">
+    <port id="0" />
+    <port id="1" />
+  </client>
+  <client name="Midi Through">
+    <port id="0" />
+  </client>
+  <client name="APC MINI">
+    <port id="0" />
+  </client>
+  <client name="X-USB">
+    <port id="0" />
+  </client>
+  <client name="Client-128" />
+  <client name="Pure Data">
+    <port id="1" />
+  </client>
+</alsa>
+<jack>
+  <client name="system">
+    <port name="capture_1" />
+    <port name="capture_2" />
+    <port name="capture_3" />
+    <port name="capture_4" />
+    <port name="capture_5" />
+    <port name="capture_6" />
+    <port name="capture_7" />
+    <port name="capture_8" />
+    <port name="capture_9" />
+    <port name="capture_10" />
+    <port name="capture_11" />
+    <port name="capture_12" />
+    <port name="capture_13" />
+    <port name="capture_14" />
+    <port name="capture_15" />
+    <port name="capture_16" />
+    <port name="capture_17" />
+    <port name="capture_18" />
+    <port name="capture_19" />
+    <port name="capture_20" />
+    <port name="capture_21" />
+    <port name="capture_22" />
+    <port name="capture_23" />
+    <port name="capture_24" />
+    <port name="capture_25" />
+    <port name="capture_26" />
+    <port name="capture_27" />
+    <port name="capture_28" />
+    <port name="capture_29" />
+    <port name="capture_30" />
+    <port name="capture_31" />
+    <port name="capture_32" />
+  </client>
+  <client name="PulseAudio JACK Sink">
+    <port name="front-left" />
+    <port name="front-right" />
+  </client>
+  <client name="pure_data">
+    <port name="output0">
+      <connection port="WeightShifter:input_1" />
+    </port>
+    <port name="output1" />
+  </client>
+  <client name="WeightShifter">
+    <port name="output_1">
+      <connection port="meter:meter_1" />
+    </port>
+    <port name="output_2">
+      <connection port="meter:meter_2" />
+    </port>
+    <port name="output_3">
+      <connection port="meter:meter_3" />
+    </port>
+    <port name="output_4">
+      <connection port="meter:meter_4" />
+    </port>
+    <port name="output_5">
+      <connection port="meter:meter_5" />
+    </port>
+    <port name="output_6">
+      <connection port="meter:meter_6" />
+    </port>
+    <port name="output_7">
+      <connection port="meter:meter_7" />
+    </port>
+    <port name="output_8" />
+  </client>
+  <client name="meter">
+    <port name="monitor_1" />
+    <port name="monitor_2" />
+    <port name="monitor_3" />
+    <port name="monitor_4" />
+    <port name="monitor_5" />
+    <port name="monitor_6" />
+    <port name="monitor_7" />
+  </client>
+</jack>
+</aj-snapshot>
